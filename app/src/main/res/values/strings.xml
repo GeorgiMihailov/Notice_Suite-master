@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Notice Suite</string>
+    <string name="user_num">User Num</string>
+    <string name="send_at">Send at</string>
+    <string name="type_your_message">Message :</string>
+    <string name="choose_date_and_time">Choose datetime and time :</string>
+    <string name="enter_text_here">Type text here</string>
+    <string name="date_and_time">Date and Time</string>
+    <string name="type_phone_number">Phone number :</string>
+    <string name="enter_phone_here">Type phone here</string>
+    <string name="text_of_the_message">Text of the message</string>
+    <string name="set_up_your_daily_sync_time_and_sync_frequency">Set up your daily sync time and sync frequency</string>
+    <string name="set_daily_sync_time">Set daily sync time</string>
+    <string name="set_sync_frequency">Set sync frequency</string>
+    <string name="Sync_options">Sync Options</string>
+    <string name="daily_sync_time_set_at">Daily sync time set at :</string>
+    <string name="check_internet_title">No internet connection</string>
+    <string name="check_internet_message">There is no internet connection</string>
+    <string name="check_internet_settings">retry</string>
+    <string name="check_internet_cancel">Cancel</string>
+    <string name="sync_now">Sync now</string>
+    <string name="findContact">Find Contact</string>
+
+</resources>

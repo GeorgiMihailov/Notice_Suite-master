@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context=".AddMessageActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:orientation="vertical">
+
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="70dp">
+
+            <TextView
+                android:id="@+id/phone_number_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
+                android:text="@string/type_phone_number" />
+
+            <LinearLayout
+                android:layout_width="70dp"
+                android:layout_height="700dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true">
+
+                <ImageButton
+                    android:id="@+id/contactsBTN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/circle_shape"
+                    android:padding="5dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/phonebook"
+                    android:tint="@color/colorAccent" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/phone_numer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="@string/enter_phone_here"
+            android:inputType="phone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/type_your_message" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/msg_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:hint="@string/enter_text_here" />
+
+            <TextView
+                android:id="@+id/textView_counter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/msg_edittext"
+                android:layout_gravity="end"
+                android:layout_margin="10dp"
+                android:text="0" />
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/date_and_time_txtView"
+            style="@style/Base.TextAppearance.AppCompat.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="40dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="80dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <FrameLayout
+
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:id="@+id/schedule_btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:background="@color/colorAccent"
+                android:paddingBottom="10dp"
+                android:paddingEnd="140dp"
+                android:paddingStart="10dp"
+                android:paddingTop="10dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/time_left"
+                android:tint="@color/white"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/scheduleTXTVIEW"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="20dp"
+                android:clickable="false"
+                android:visibility="invisible"
+                android:text="SCHEDULE"
+                android:textColor="@color/white" />
+        </FrameLayout>
+
+        <FrameLayout
+
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_weight="1">
+
+
+            <ImageButton
+                android:id="@+id/send_btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:background="@color/colorAccent"
+                android:paddingBottom="10dp"
+                android:paddingEnd="140dp"
+                android:paddingStart="10dp"
+                android:paddingTop="10dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/send"
+                android:tint="@color/white"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/sendnowTXTVIEW"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="20dp"
+                android:clickable="false"
+                android:text="SEND NOW"
+                android:visibility="invisible"
+                android:textColor="@color/white" />
+
+        </FrameLayout>
+    </LinearLayout>
+
+
+</LinearLayout>
