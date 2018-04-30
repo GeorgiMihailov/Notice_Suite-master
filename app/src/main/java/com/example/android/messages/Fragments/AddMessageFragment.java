@@ -7,7 +7,10 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -25,7 +28,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.messages.ContactsActivity;
+import com.example.android.messages.Api.RestApi;
 import com.example.android.messages.Models.MsgModel;
 import com.example.android.messages.Preferences.PreferencesManager;
 import com.example.android.messages.R;
@@ -39,6 +42,9 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -72,6 +78,8 @@ public class AddMessageFragment extends android.support.v4.app.Fragment implemen
     PendingIntent pendingIntent;
     @BindView(R.id.contactsBTN)
     ImageButton mContactsBtn;
+    RestApi api;
+    long calendar1TimeInMillis;
 
 
     @Nullable
@@ -88,14 +96,16 @@ public class AddMessageFragment extends android.support.v4.app.Fragment implemen
 //            AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(getActivity().ALARM_SERVICE);
 //            alarmManager.set(AlarmManager.RTC_WAKEUP, cal, pendingIntent);
 //        }
+        api = new RestApi(getContext());
 
 
 
         mContactsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getActivity(), ContactsActivity.class);
-                startActivityForResult(i, 1000);
+                Intent pickContactIntent = new Intent(Intent.ACTION_PICK, Uri.parse("content://contacts"));
+                pickContactIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE); // Show user only contacts w/ phone numbers
+                startActivityForResult(pickContactIntent, 1000);
             }
         });
 
@@ -139,6 +149,8 @@ public class AddMessageFragment extends android.support.v4.app.Fragment implemen
                 requestSmsPermission();
                 setmDateTime();
                 PreferencesManager.addPhoneNumber(mPhoneNumberEdittext.getText().toString(), getContext());
+
+
 
             }
         });
@@ -283,7 +295,7 @@ public class AddMessageFragment extends android.support.v4.app.Fragment implemen
         calendar1.set(Calendar.MINUTE, minuteSet);
 
 
-        final long calendar1TimeInMillis = calendar1.getTimeInMillis();
+        calendar1TimeInMillis = calendar1.getTimeInMillis();
         msgModel.setPhone_ID(mPhoneNumberEdittext.getText().toString());
         msgModel.setNotice_text(mMsgTxtEdittext.getText().toString());
         msgModel.setDatetime(calendar1.getTimeInMillis());
@@ -296,6 +308,28 @@ public class AddMessageFragment extends android.support.v4.app.Fragment implemen
         AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(getActivity().ALARM_SERVICE);
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar1TimeInMillis, pendingIntent);
         Toast.makeText(getActivity(), "Sms scheduled", Toast.LENGTH_LONG).show();
+        api.checkInternet(new Runnable() {
+            @Override
+            public void run() {
+
+                msgModel = new MsgModel();
+                msgModel.setDatetime(calendar1TimeInMillis);
+                msgModel.setNotice_text(mMsgTxtEdittext.getText().toString());
+                msgModel.setPhone_ID(mPhoneNumberEdittext.getText().toString());
+                Call<MsgModel> call = api.addNewMessage( msgModel);
+                call.enqueue(new Callback<MsgModel>() {
+                    @Override
+                    public void onResponse(Call<MsgModel> call, Response<MsgModel> response) {
+                        Toast.makeText(getContext(), "success", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<MsgModel> call, Throwable t) {
+                        Toast.makeText(getContext(), "fail", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
 
 
         mDateTime.setText("Date :   " + daySey + "/" + monthSet + 1+"/" + yearSet + "\n" + "Time :    " + hourSet + ":" + minuteSet);
@@ -324,19 +358,35 @@ public class AddMessageFragment extends android.support.v4.app.Fragment implemen
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1000 && resultCode == RESULT_OK) {
 
-            String dataStringExtra = data.getStringExtra("phoneNumber");
-            if (dataStringExtra != null) {
-                String[] phone = dataStringExtra.split(" ");
-                mPhoneNumberEdittext.setText(phone[phone.length - 1]);
-            }
-            if (data.hasExtra("SEARCH_EXTRA")) {
-                String searchDate = data.getStringExtra("phoneNumberFromSearch");
-                mPhoneNumberEdittext.setText(searchDate);
+
+            if (requestCode == 1000) {
+                // Make sure the request was successful
+                if (resultCode == RESULT_OK) {
+                    // Get the URI that points to the selected contact
+                    Uri contactUri = data.getData();
+                    // We only need the NUMBER column, because there will be only one row in the result
+                    String[] projection = {ContactsContract.CommonDataKinds.Phone.NUMBER};
+
+                    // Perform the query on the contact to get the NUMBER column
+                    // We don't need a selection or sort order (there's only one result for the given URI)
+                    // CAUTION: The query() method should be called from a separate thread to avoid blocking
+                    // your app's UI thread. (For simplicity of the sample, this code doesn't do that.)
+                    // Consider using CursorLoader to perform the query.
+                    Cursor cursor = getContext().getContentResolver()
+                            .query(contactUri, projection, null, null, null);
+                    cursor.moveToFirst();
+
+                    // Retrieve the phone number from the NUMBER column
+                    int column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                    String number = cursor.getString(column);
+                    mPhoneNumberEdittext.setText(number);
+
+                    // Do something with the phone number...
+                }
             }
         }
     }
 
 
-}
+

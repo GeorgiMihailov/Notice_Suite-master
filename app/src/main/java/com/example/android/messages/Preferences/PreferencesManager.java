@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 
 import com.example.android.messages.Models.MessagesList;
 import com.example.android.messages.Models.MsgModel;
-import com.example.android.messages.Models.TimeInfo;
 import com.google.gson.Gson;
 
 /**
@@ -21,11 +20,6 @@ public class PreferencesManager {
         return context.getApplicationContext().getSharedPreferences("MySharedPreferencesFile", Activity.MODE_PRIVATE);
     }
 
-    public static void addTimeInfo(TimeInfo timeInfo, Context c) {
-        Gson gson = new Gson();
-        String mapStrnig = gson.toJson(timeInfo);
-        getPreferences(c).edit().putString("timeInfo", mapStrnig).apply();
-    }
 
     public static void addPhoneNumber(String phoneNumber, Context context) {
         getPreferences(context).edit().putString("phoneNumber", phoneNumber).apply();
@@ -49,9 +43,6 @@ public class PreferencesManager {
         return getPreferences(c).getString("phoneNumber", "");
     }
 
-    public static TimeInfo getTimeInfo(Context context) {
-        return new Gson().fromJson(getPreferences(context).getString("timeInfo", ""), TimeInfo.class);
-    }
 
     public static void userInfo(MsgModel userInfo, Context c) {
         Gson gson = new Gson();

@@ -15,17 +15,26 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.messages.Api.RestApi;
 import com.example.android.messages.MessagesActivity;
+import com.example.android.messages.Models.MessagesList;
+import com.example.android.messages.Models.MsgModel;
+import com.example.android.messages.Models.SyncModel;
+import com.example.android.messages.Preferences.PreferencesManager;
 import com.example.android.messages.R;
 import com.example.android.messages.Receivers.SyncReceiver;
 import com.philliphsu.bottomsheetpickers.time.grid.GridTimePickerDialog;
 import com.shawnlin.numberpicker.NumberPicker;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by pc on 4/22/2018.
@@ -41,15 +50,19 @@ public class SetupFragment extends android.support.v4.app.Fragment implements Gr
     Button mSyncFrequency;
     @BindView(R.id.sync_now)
     Button mSyncNowBtn;
+    SyncModel syncModel;
     PendingIntent pendingIntent;
-    int hour;
-    int min;
+    RestApi api;
+    MessagesList modelList;
+    ArrayList<MsgModel> msgModel;
+
     long time;
     String SENT = "com.android.SYNCRECEIVER_ACTION";
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        api = new RestApi(getContext());
 
         View view = inflater.inflate(R.layout.setup_fragment_layout, null);
         mUnnbinder = ButterKnife.bind(this, view);
@@ -63,6 +76,34 @@ public class SetupFragment extends android.support.v4.app.Fragment implements Gr
 
                 setmTime();
 
+            }
+        });
+        mSyncNowBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                api.checkInternet(new Runnable() {
+                    @Override
+                    public void run() {
+                        Call<ArrayList<MsgModel>> call = api.getMsgs();
+                        call.enqueue(new Callback<ArrayList<MsgModel>>() {
+                            @Override
+                            public void onResponse(Call<ArrayList<MsgModel>> call, Response<ArrayList<MsgModel>> response) {
+                                if (response.isSuccessful()){
+                                    msgModel = response.body();
+                                    modelList = new MessagesList();
+                                    modelList.setMessages(msgModel);
+                                    PreferencesManager.modelList(modelList,getContext());
+                                    Toast.makeText(getContext(),"SETUP", Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ArrayList<MsgModel>> call, Throwable t) {
+
+                            }
+                        });
+                    }
+                });
             }
         });
         mSyncFrequency.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +128,21 @@ public class SetupFragment extends android.support.v4.app.Fragment implements Gr
                         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, interval, pendingIntent);
                         dialog.dismiss();
                         Toast.makeText(getContext(), "Sync is set", Toast.LENGTH_LONG).show();
+                        Call<SyncModel> call = api.setSyncTimeAndFreq(time,interval);
+                        call.enqueue(new Callback<SyncModel>() {
+                            @Override
+                            public void onResponse(Call<SyncModel> call, Response<SyncModel> response) {
+                                if (response.isSuccessful()){
+                                    Toast.makeText(getContext(), "POST SUCCESSFUL", Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<SyncModel> call, Throwable t) {
+
+                            }
+                        });
+
 
 
                     }

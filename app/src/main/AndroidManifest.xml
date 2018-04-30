@@ -42,7 +42,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".AddMessageActivity" />
-        <activity android:name=".ContactsActivity"></activity>
     </application>
 
 </manifest>

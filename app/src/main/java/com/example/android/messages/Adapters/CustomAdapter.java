@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.android.messages.Api.RestApi;
@@ -15,7 +16,6 @@ import com.example.android.messages.R;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,6 +55,18 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         String text = model.getNotice_text();
         text = text.replace("\n", "").replace("\r", "");
         holder.msgTxt.setText(text);
+        holder.msgTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (holder.msgTxt.getMaxLines() == 1) {
+                    holder.msgTxt.setMaxLines(10);
+                }else  if (holder.msgTxt.getMaxLines() == 10){
+                    holder.msgTxt.setMaxLines(1);
+                }
+            }
+        });
+
+
         long sendAt = (model.getDatetime());
         String strLong = Long.toString(sendAt);
         holder.img.setImageDrawable(context.getResources().getDrawable(R.drawable.contact));
@@ -72,6 +84,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         TextView accNum;
         @BindView(R.id.time_of_msg)
         TextView timeOfMsg;
+        @BindView(R.id.layout)
+        LinearLayout layout;
         @BindView(R.id.message_txt)
         TextView msgTxt;
 

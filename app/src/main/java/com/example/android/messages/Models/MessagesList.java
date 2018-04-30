@@ -14,6 +14,7 @@ public class MessagesList implements Serializable {
         return messages;
     }
 
+
     public void setMessages(ArrayList<MsgModel> messages) {
         this.messages = messages;
     }

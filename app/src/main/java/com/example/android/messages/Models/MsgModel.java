@@ -1,5 +1,8 @@
 package com.example.android.messages.Models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -7,11 +10,19 @@ import java.io.Serializable;
  */
 
 public class MsgModel implements Serializable {
-    int notice_ID;
-    long datetime;
-    String Phone_ID;
-    String notice_text;
 
+    @SerializedName("notice_ID")
+    @Expose
+    int notice_ID;
+    @SerializedName("datetime")
+    @Expose
+    long datetime;
+    @SerializedName("Phone_ID")
+    @Expose
+    String Phone_ID;
+    @SerializedName("notice_text")
+    @Expose
+    String notice_text;
 
 
     public MsgModel() {
@@ -54,5 +65,15 @@ public class MsgModel implements Serializable {
 
     public void setDatetime(long datetime) {
         this.datetime = datetime;
+    }
+
+    @Override
+    public String toString() {
+        return "MsgModel{" +
+                "notice_ID=" + notice_ID +
+                ", datetime=" + datetime +
+                ", Phone_ID='" + Phone_ID + '\'' +
+                ", notice_text='" + notice_text + '\'' +
+                '}';
     }
 }

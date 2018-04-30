@@ -9,7 +9,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
-import com.example.android.messages.Adapters.CustomAdapter;
 import com.example.android.messages.Api.RestApi;
 import com.example.android.messages.Models.MessagesList;
 import com.example.android.messages.Models.MsgModel;
@@ -32,7 +31,6 @@ public class SyncService extends Service {
     private Context context;
     MessagesList modelList;
     ArrayList<MsgModel> msgModel;
-    CustomAdapter customAdapter;
 
 
 

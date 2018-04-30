@@ -8,6 +8,7 @@ import com.example.android.messages.BuildConfig;
 import com.example.android.messages.CheckConnection;
 import com.example.android.messages.LoggingInterceptor;
 import com.example.android.messages.Models.MsgModel;
+import com.example.android.messages.Models.SyncModel;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -48,6 +49,12 @@ public class RestApi {
 
     public Call<ArrayList<MsgModel>> getMsgs() {
         return request().getMsgs();
+    }
+    public Call<SyncModel>  setSyncTimeAndFreq (long daily_sync_time, long sync_frequency){
+        return request().setSyncTimeAndFreq(daily_sync_time, sync_frequency);
+    }
+    public Call<MsgModel> addNewMessage (MsgModel msgModel){
+        return request().addNewMessage(msgModel);
     }
     public void checkInternet(Runnable callback){
         if (CheckConnection.CheckInternetConnectivity(activity, true, callback )){
